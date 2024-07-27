@@ -9,9 +9,10 @@ interface Props {
   url: string;
   cta: string;
   small?: boolean;
+  brand:string;
 }
 
-export default function Card({ image, title, url, cta, small }: Props) {
+export default function Card({ image, title, url, cta, small, brand }: Props) {
   const titleClassYour = small
     ? "block text-primary font-bold font-title text-xl"
     : "block text-primary font-bold font-title text-4xl md:text-6xl";
@@ -39,7 +40,7 @@ export default function Card({ image, title, url, cta, small }: Props) {
         <button className="cta absolute bottom-4 right-4">{cta}</button>
         <div className={titleWrapperClass}>
           <h3>
-            <span className={titleClassYour}>your</span>
+            <span className={titleClassYour}>{brand}</span>
             <span className={titleClassRest}>{title}</span>
           </h3>
         </div>

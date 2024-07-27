@@ -111,6 +111,7 @@ export default async function Plp({
                   url={product.url}
                   cta="BUY NOW"
                   small={true}
+                  brand={product.brand || ""}
                 />
               );
             })}
