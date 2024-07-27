@@ -8,10 +8,10 @@ export default function GlobalHeader() {
           <span className="font-bold font-title text-3xl self-end">skncre</span>
         </Link>
         <nav className="flex flex-wrap gap-x-6 gap-y-2 items-center md:text-xl">
-          <Link href="/pdp/face-serum">face serum</Link>
-          <Link href="/pdp/face-cream">face cream</Link>
-          <Link href="/pdp/eye-contour">eye contour</Link>
-          <Link href="/pdp/bundle">skncre bundle</Link>
+          <Link href="/plp/Facial Care">facial care</Link>
+          <Link href="/plp/Body Care">body care</Link>
+          <Link href="/plp/Special Treatments">special treatments</Link>
+          <Link href="/plp/Eye Care">eye care</Link>
         </nav>
       </div>
     </header>

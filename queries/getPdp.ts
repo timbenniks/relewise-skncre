@@ -5,7 +5,20 @@ import type { Stage } from "../gql/graphql";
 
 const query = graphql(`
   query Pdp($slug: String!, $stage: Stage! = PUBLISHED) {
-    pdp(where: { slug: $slug }, stage: $stage) {
+    skncreProduct(where: { slug: $slug }, stage: $stage) {
+      productId
+      slug
+      brand
+      name
+      category
+      shortDescription
+      description
+      images
+      ingredients
+      price
+      stock
+    }
+    pdp(where: { slug: "face-serum" }, stage: $stage) {
       id
       __typename
       slug
@@ -61,21 +74,6 @@ const query = graphql(`
               }
             }
           }
-        }
-      }
-
-      product {
-        id
-        slug
-        name
-        price
-        ingredients
-        shortDescription
-        description
-        stock
-        images {
-          alt
-          url
         }
       }
     }

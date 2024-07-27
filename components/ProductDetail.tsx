@@ -10,12 +10,9 @@ interface Props {
     shortDescription: string;
     description: string;
     stock: string;
-    images: [
-      {
-        alt: string;
-        url: string;
-      }
-    ];
+    images: string[];
+    brand: string;
+    category: string;
   };
 }
 
@@ -26,14 +23,14 @@ export default function ProductDetail({ product }: Props) {
         {product.images.map((img: any) => {
           return (
             <Image
-              src={img.url}
-              alt={img.alt}
+              src={img}
+              alt={product.name}
               width={1440}
               height={532}
               className="aspect-[1/1] object-cover"
               sizes="50vw"
               loading="eager"
-              key={img.url}
+              key={img}
             />
           );
         })}
@@ -54,6 +51,10 @@ export default function ProductDetail({ product }: Props) {
           <a href="#" className="cta" target="_blank">
             add to cart
           </a>
+
+          <p className="my-8">
+            By {product.brand} in {product.category}
+          </p>
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mx-8 md:mx-16">

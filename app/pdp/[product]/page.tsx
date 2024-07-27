@@ -16,23 +16,25 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const { isEnabled } = draftMode();
-  const { pdp }: PdpQuery = await getPdp(
+  const prd: PdpQuery = await getPdp(
     params.product as string,
     isEnabled ? "DRAFT" : "PUBLISHED"
   );
 
   return {
-    title: isEnabled ? `⚡️ ${pdp?.title}` : pdp?.title || "",
-    description: pdp?.description || "",
+    title: isEnabled
+      ? `⚡️ ${prd?.skncreProduct?.name}`
+      : prd?.skncreProduct?.name || "",
+    description: prd?.skncreProduct?.description || "",
     openGraph: {
       type: "website",
-      title: pdp?.title || "",
-      images: [pdp?.ogImage?.url || ""],
+      title: prd?.skncreProduct?.name || "",
+      images: [prd?.skncreProduct?.images[0] || ""],
     },
     twitter: {
       card: "summary_large_image",
-      title: pdp?.title || "",
-      description: pdp?.description || "",
+      title: prd?.skncreProduct?.name || "",
+      description: prd?.skncreProduct?.description || "",
     },
   };
 }
@@ -43,22 +45,22 @@ export default async function Home({
   params: { product: string };
 }) {
   const { isEnabled } = draftMode();
-  const { pdp }: PdpQuery = await getPdp(
+  const prd: PdpQuery = await getPdp(
     params.product as string,
     isEnabled ? "DRAFT" : "PUBLISHED"
   );
 
   await relewiseTracker().trackProductView({
-    productId: "14",//String(pdp?.product?.id),
+    productId: prd?.skncreProduct?.productId,
     user: getRelewiseUser(),
   });
 
   return (
     <main className="max-w-screen-2xl mx-auto">
-      <ProductDetail product={pdp?.product} />
+      <ProductDetail product={prd?.skncreProduct} />
       <section className="mb-12">
-        <ComponentRenderer data={pdp?.components} />
-        <RecommendedProducts productId={pdp?.product?.id} />
+        <ComponentRenderer data={prd?.pdp.components} />
+        <RecommendedProducts productId={prd?.skncreProduct?.productId} />
       </section>
     </main>
   );
