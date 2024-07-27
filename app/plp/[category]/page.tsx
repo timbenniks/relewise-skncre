@@ -41,7 +41,7 @@ export default async function Plp({
 
   const cat = decodeURIComponent(params.category);
 
-  relewiseTracker().trackProductCategoryView({
+  await relewiseTracker().trackProductCategoryView({
     idPath: [cat],
     user: getRelewiseUser(),
   });
@@ -69,10 +69,10 @@ export default async function Plp({
     );
 
   const searcher = new Searcher(
-    "0dac7093-af97-41a1-b7de-3cc1cc3f3120",
-    "np1VU:ftHwW1Aah",
+    process.env.NEXT_PUBLIC_RELEWISE_DATASET_ID as string,
+    process.env.NEXT_PUBLIC_RELEWISE_API_KEY as string,
     {
-      serverUrl: "https://sandbox-api.relewise.com/",
+      serverUrl: process.env.NEXT_PUBLIC_RELEWISE_SERVER_URL,
     }
   );
 

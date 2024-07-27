@@ -48,8 +48,8 @@ export default async function Home({
     isEnabled ? "DRAFT" : "PUBLISHED"
   );
 
-  relewiseTracker().trackProductView({
-    productId: String(pdp?.product?.id),
+  await relewiseTracker().trackProductView({
+    productId: "14",//String(pdp?.product?.id),
     user: getRelewiseUser(),
   });
 
