@@ -3,23 +3,26 @@ import SearchBar from '../../components/SearchBar';
 import { ProductSearchBuilder, Searcher } from '@relewise/client';
 import { getRelewiseUser } from '@/lib/relewiseTrackingUtils';
 import Card from '@/components/Card';
+import BrandFacet from '@/components/BrandFacet';
 
-interface SearchResult {
-  name: string;
-}
+// interface SearchResult {
+//   name: string;
+// }
 
 export default async function SearchPage({
     searchParams,
   }: {
     searchParams?: {
       query?: string;
+      brands?:string;
       page?: string;
     };
   })
 {
     const query = searchParams?.query || '';
-    const currentPage = Number(searchParams?.page) || 1;
-console.log("query: " + query);
+    const brandsParam = decodeURIComponent(searchParams?.brands || '').split(',');
+    //const currentPage = Number(searchParams?.page) || 1;
+
   const searcher = new Searcher(
     process.env.NEXT_PUBLIC_RELEWISE_DATASET_ID as string,
     process.env.NEXT_PUBLIC_RELEWISE_API_KEY as string,
@@ -57,15 +60,16 @@ let result;
             .setPageSize(30)
             .setPage(1))
         .facets(f => f
-            .addBrandFacet()
+            .addBrandFacet(brandsParam)
             .addProductDataStringValueFacet("ingredients",'Product')
             .addSalesPriceRangeFacet('Product')
             .addCategoryFacet("ImmediateParent")
         );
-
             result =  await searcher.searchProducts(builder.build());
     }
   
+    const brandFacets = result?.facets?.items?.find(item => item.$type.includes('BrandFacetResult'));
+
     const relewiseMappedProducts = result?.results?.map((result) => {
         return {
           key: result.productId,
@@ -93,14 +97,7 @@ let result;
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
             <aside className="md:col-span-2">
               <h2 className="text-2xl font-bold mb-4">Filter by:</h2>
-              <div className="mb-4">
-                <h3 className="font-semibold">Facets</h3>
-                <ul>
-                  <li><input type="checkbox" id="fat1" /> <label htmlFor="cat1">Facet 1</label></li>
-                  <li><input type="checkbox" id="fat2" /> <label htmlFor="cat2">Facet 2</label></li>
-                  <li><input type="checkbox" id="fat3" /> <label htmlFor="cat3">Facet 3</label></li>
-                </ul>
-              </div>
+              <BrandFacet availableFacets={brandFacets.available} />
             </aside>
 
             <section className="md:col-span-10 mb-12">
