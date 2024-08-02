@@ -1,6 +1,6 @@
-'use client';
-import React, { FC, useState, ChangeEvent } from 'react';
-import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+"use client";
+import React, { FC, useState, ChangeEvent } from "react";
+import { useSearchParams, usePathname, useRouter } from "next/navigation";
 
 interface BrandFacetProps {
   availableFacets: {
@@ -23,7 +23,7 @@ const BrandFacet: FC<BrandFacetProps> = ({ availableFacets }) => {
     if (checked) {
       updatedFacets.push(value);
     } else {
-      updatedFacets = updatedFacets.filter(facet => facet !== value);
+      updatedFacets = updatedFacets.filter((facet) => facet !== value);
     }
 
     setSelectedFacets(updatedFacets);
@@ -32,13 +32,13 @@ const BrandFacet: FC<BrandFacetProps> = ({ availableFacets }) => {
 
   const updateQueryParams = (facets: string[]) => {
     const params = new URLSearchParams(searchParams);
-    
+
     if (facets.length > 0) {
-      params.set('brands', facets.join(','));
+      params.set("brands", facets.join(","));
     } else {
-      params.delete('brands');
+      params.delete("brands");
     }
-    
+
     router.replace(`${pathname}?${params.toString()}`);
   };
 
@@ -52,15 +52,18 @@ const BrandFacet: FC<BrandFacetProps> = ({ availableFacets }) => {
       <ul>
         {availableFacets.map((facet) => (
           <li key={facet.value.displayName}>
-            <input
-              type="checkbox"
-              id={facet.value.id}
-              value={facet.value.displayName}
-              onChange={handleFacetChange}
-              checked={selectedFacets.includes(facet.value.displayName)}
-            />
-            <label htmlFor={facet.value.displayName}>
-              {facet.value.displayName} ({facet.hits})
+            <label className="felx space-x-1">
+              <input
+                type="checkbox"
+                id={facet.value.id}
+                value={facet.value.displayName}
+                onChange={handleFacetChange}
+                className="relative top-0.5"
+                checked={selectedFacets.includes(facet.value.displayName)}
+              />
+              <span>
+                {facet.value.displayName}({facet.hits})
+              </span>
             </label>
           </li>
         ))}
