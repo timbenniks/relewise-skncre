@@ -7,15 +7,25 @@ export default function SearchBar({ placeholder }: { placeholder: string }) {
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  function handleSearch(term: string) {
-    const params = new URLSearchParams(searchParams);
+  // function handleSearch(term: string) {
+  //   const params = new URLSearchParams(searchParams);
 
+  //   if (term) {
+  //     params.set("query", term);
+  //   } else {
+  //     params.delete("query");
+  //   }
+
+  //   replace(`${pathname}?${params.toString()}`);
+  // }
+
+  function handleSearch(term: string) {
+    const params = new URLSearchParams();
+  
     if (term) {
       params.set("query", term);
-    } else {
-      params.delete("query");
     }
-
+  
     replace(`${pathname}?${params.toString()}`);
   }
 

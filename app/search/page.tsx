@@ -1,3 +1,4 @@
+
 import SearchBar from "../../components/SearchBar";
 import { ProductSearchBuilder, Searcher } from "@relewise/client";
 import { getRelewiseUser } from "@/lib/relewiseTrackingUtils";
