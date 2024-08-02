@@ -3,6 +3,7 @@ import { ProductSearchBuilder, Searcher } from "@relewise/client";
 import { getRelewiseUser } from "@/lib/relewiseTrackingUtils";
 import Card from "@/components/Card";
 import BrandFacet from "@/components/BrandFacet";
+import IngredientFacet from "@/components/IngredientFacet";
 
 export default async function SearchPage({
   searchParams,
@@ -10,11 +11,15 @@ export default async function SearchPage({
   searchParams?: {
     query?: string;
     brands?: string;
+    ingredients?: string;
     page?: string;
   };
 }) {
   const query = searchParams?.query || "";
   const brandsParam = decodeURIComponent(searchParams?.brands || "").split(",");
+  const ingredientsParam = decodeURIComponent(
+    searchParams?.ingredients || ""
+  ).split(",");
 
   const searcher = new Searcher(
     process.env.NEXT_PUBLIC_RELEWISE_DATASET_ID as string,
@@ -55,15 +60,24 @@ export default async function SearchPage({
       .facets((f) =>
         f
           .addBrandFacet(brandsParam)
-          .addProductDataStringValueFacet("ingredients", "Product")
+          .addProductDataStringValueFacet(
+            "ingredients",
+            "Product",
+            ingredientsParam
+          )
           .addSalesPriceRangeFacet("Product")
           .addCategoryFacet("ImmediateParent")
       );
+
     result = await searcher.searchProducts(builder.build());
   }
 
   const brandFacets = result?.facets?.items?.find((item) =>
     item.$type.includes("BrandFacetResult")
+  );
+
+  const ingredientFacets = result?.facets?.items?.find((item) =>
+    item.$type.includes("ProductDataStringValueFacetResult")
   );
 
   const relewiseMappedProducts = result?.results?.map((result) => {
@@ -94,6 +108,7 @@ export default async function SearchPage({
             <aside className="md:col-span-2">
               <h2 className="text-2xl font-bold mb-4">Filter by:</h2>
               <BrandFacet availableFacets={brandFacets?.available} />
+              <IngredientFacet availableFacets={ingredientFacets?.available} />
             </aside>
 
             <section className="md:col-span-10 mb-12">
