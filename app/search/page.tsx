@@ -4,6 +4,7 @@ import { getRelewiseUser } from "@/lib/relewiseTrackingUtils";
 import Card from "@/components/Card";
 import BrandFacet from "@/components/BrandFacet";
 import IngredientFacet from "@/components/IngredientFacet";
+import { valueFromAST } from "graphql";
 
 export default async function SearchPage({
   searchParams,
@@ -17,9 +18,9 @@ export default async function SearchPage({
 }) {
   const query = searchParams?.query || "";
   const brandsParam = decodeURIComponent(searchParams?.brands || "").split(",");
-  const ingredientsParam = decodeURIComponent(
-    searchParams?.ingredients || ""
-  ).split(",");
+  const ingredientsParam = searchParams?.ingredients 
+  ? decodeURIComponent(searchParams.ingredients).split(",") 
+  : [];
 
   const searcher = new Searcher(
     process.env.NEXT_PUBLIC_RELEWISE_DATASET_ID as string,

@@ -18,8 +18,8 @@ const IngredientFacet: FC<IngredientFacetProps> = ({ availableFacets }) => {
 
   const handleFacetChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = e.target;
-
     let updatedFacets = [...selectedFacets];
+
     if (checked) {
       updatedFacets.push(value);
     } else {
@@ -61,7 +61,7 @@ const IngredientFacet: FC<IngredientFacetProps> = ({ availableFacets }) => {
                 value={facet.value}
                 onChange={handleFacetChange}
                 className="relative top-0.5"
-                checked={selectedFacets.includes(facet.selected)}
+                checked={selectedFacets.includes(facet.value)}
               />
               <span>
                 {facet.value}({facet.hits})
