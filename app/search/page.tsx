@@ -43,40 +43,46 @@ export default async function SearchPage({
 
   let builder;
   let result;
+  builder = new ProductSearchBuilder(settings)
+  .setSelectedProductProperties({
+    displayName: true,
+    categoryPaths: true,
+    assortments: false,
+    pricing: true,
+    allData: false,
+    viewedByUserInfo: false,
+    purchasedByUserInfo: false,
+    brand: true,
+    allVariants: false,
+    dataKeys: ["slug", "image", "shortDescription"],
+    viewedByUserCompanyInfo: false,
+    purchasedByUserCompanyInfo: false,
+  })
+  .setTerm(null)
+  .pagination((p) => p.setPageSize(30).setPage(1))
+  .facets((f) =>
+    f
+      .addBrandFacet(brandsParam)
+      .addProductDataStringValueFacet(
+        "ingredients",
+        "Product",
+        ingredientsParam
+      )
+      .addSalesPriceRangeFacet("Product")
+      .addCategoryFacet("ImmediateParent", categoryParam)
+  );
 
-  if (query && query.length > 2) {
-    builder = new ProductSearchBuilder(settings)
-      .setSelectedProductProperties({
-        displayName: true,
-        categoryPaths: true,
-        assortments: false,
-        pricing: true,
-        allData: false,
-        viewedByUserInfo: false,
-        purchasedByUserInfo: false,
-        brand: true,
-        allVariants: false,
-        dataKeys: ["slug", "image", "shortDescription"],
-        viewedByUserCompanyInfo: false,
-        purchasedByUserCompanyInfo: false,
-      })
-      .setTerm(query)
-      .pagination((p) => p.setPageSize(30).setPage(1))
-      .facets((f) =>
-        f
-          .addBrandFacet(brandsParam)
-          .addProductDataStringValueFacet(
-            "ingredients",
-            "Product",
-            ingredientsParam
-          )
-          .addSalesPriceRangeFacet("Product")
-          .addCategoryFacet("ImmediateParent", categoryParam)
-      );
+  if (query && query.length > 0) {
 
-    result = await searcher.searchProducts(builder.build());
+      builder.setTerm(query);
+      result = await searcher.searchProducts(builder.build());  
+  }
+  else if(query.length==0){
+    result = await searcher.searchProducts(builder.build());  
   }
 
+  
+  
   const brandFacets = result?.facets?.items?.find((item) =>
     item.$type.includes("BrandFacetResult")
   );

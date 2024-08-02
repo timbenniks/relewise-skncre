@@ -42,7 +42,7 @@ const IngredientFacet: FC<IngredientFacetProps> = ({ availableFacets }) => {
     router.replace(`${pathname}?${params.toString()}`);
   };
 
-  const finalFacets = availableFacets.filter((facet) => facet.hits > 1);
+  const finalFacets = availableFacets.filter((facet) => facet.hits > 1).sort((faceta, facetb)=>facetb.hits - faceta.hits);
 
   if (!finalFacets || finalFacets.length === 0) {
     return null;
