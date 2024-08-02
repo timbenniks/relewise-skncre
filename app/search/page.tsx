@@ -5,6 +5,7 @@ import { getRelewiseUser } from "@/lib/relewiseTrackingUtils";
 import Card from "@/components/Card";
 import BrandFacet from "@/components/BrandFacet";
 import IngredientFacet from "@/components/IngredientFacet";
+import CategoryFacet from "@/components/CategoryFacet"
 import { valueFromAST } from "graphql";
 
 export default async function SearchPage({
@@ -14,11 +15,13 @@ export default async function SearchPage({
     query?: string;
     brands?: string;
     ingredients?: string;
+    categories?:string;
     page?: string;
   };
 }) {
   const query = searchParams?.query || "";
   const brandsParam = decodeURIComponent(searchParams?.brands || "").split(",");
+  const categoryParam = decodeURIComponent(searchParams?.categories || "").split(",");
   const ingredientsParam = searchParams?.ingredients 
   ? decodeURIComponent(searchParams.ingredients).split(",") 
   : [];
@@ -68,7 +71,7 @@ export default async function SearchPage({
             ingredientsParam
           )
           .addSalesPriceRangeFacet("Product")
-          .addCategoryFacet("ImmediateParent")
+          .addCategoryFacet("ImmediateParent", categoryParam)
       );
 
     result = await searcher.searchProducts(builder.build());
@@ -81,6 +84,11 @@ export default async function SearchPage({
   const ingredientFacets = result?.facets?.items?.find((item) =>
     item.$type.includes("ProductDataStringValueFacetResult")
   );
+
+  const categoryFacets = result?.facets?.items?.find((item) =>
+    item.$type.includes("CategoryFacetResult")
+  );
+
 
   const relewiseMappedProducts = result?.results?.map((result) => {
     return {
@@ -103,12 +111,14 @@ export default async function SearchPage({
 
       {relewiseMappedProducts && relewiseMappedProducts.length > 0 && (
         <>
+        {/* <pre>{JSON.stringify(result?.facets?.items, null, 2)}</pre> */}
           <h3 className="text-5xl pt-12 mb-12 font-bold font-title text-center">
             Search result
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
             <aside className="md:col-span-2">
               <h2 className="text-2xl font-bold mb-4">Filter by:</h2>
+              <CategoryFacet availableFacets={categoryFacets?.available} />
               <BrandFacet availableFacets={brandFacets?.available} />
               <IngredientFacet availableFacets={ingredientFacets?.available} />
             </aside>
