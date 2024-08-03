@@ -39,7 +39,9 @@ const IngredientFacet: FC<IngredientFacetProps> = ({ availableFacets }) => {
     router.replace(`${pathname}?${params.toString()}`);
   };
   
-  const finalFacets = availableFacets?.filter((facet) => facet.hits > 1).sort((faceta, facetb)=>facetb.hits - faceta.hits);
+  const finalFacets = availableFacets?
+    .filter((facet) => facet.hits > 1)
+    .sort((faceta, facetb) => facetb.hits - faceta.hits);
 
   if (!finalFacets || finalFacets.length === 0) {
     return null;
@@ -61,7 +63,7 @@ const IngredientFacet: FC<IngredientFacetProps> = ({ availableFacets }) => {
                 checked={selectedFacets.includes(facet.value || "")}
               />
               <span>
-                {facet.value}({facet.hits})
+                {facet.value} ({facet.hits})
               </span>
             </label>
           </li>
