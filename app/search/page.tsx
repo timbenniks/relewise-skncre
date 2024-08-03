@@ -114,7 +114,6 @@ export default async function SearchPage({
       <SearchBar placeholder="Any product attribute..." />
       {relewiseMappedProducts && relewiseMappedProducts.length > 0 && (
         <>
-        {/* <pre>{JSON.stringify(result?.facets?.items, null, 2)}</pre> */}
           <h3 className="text-5xl pt-12 mb-12 font-bold font-title text-center">
             Search result
           </h3>
