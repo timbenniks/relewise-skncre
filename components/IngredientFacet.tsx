@@ -1,13 +1,10 @@
 "use client";
 import React, { FC, useState, ChangeEvent } from "react";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
+import { ProductDataStringValueFacetResult, StringAvailableFacetValue } from "@relewise/client";
 
 interface IngredientFacetProps {
-  availableFacets: {
-    value: string;
-    hits: number;
-    selected: boolean;
-  }[];
+  availableFacets?: StringAvailableFacetValue[] | null;
 }
 
 const IngredientFacet: FC<IngredientFacetProps> = ({ availableFacets }) => {
@@ -41,8 +38,8 @@ const IngredientFacet: FC<IngredientFacetProps> = ({ availableFacets }) => {
 
     router.replace(`${pathname}?${params.toString()}`);
   };
-
-  const finalFacets = availableFacets.filter((facet) => facet.hits > 1).sort((faceta, facetb)=>facetb.hits - faceta.hits);
+  
+  const finalFacets = availableFacets?.filter((facet) => facet.hits > 1).sort((faceta, facetb)=>facetb.hits - faceta.hits);
 
   if (!finalFacets || finalFacets.length === 0) {
     return null;
@@ -52,16 +49,16 @@ const IngredientFacet: FC<IngredientFacetProps> = ({ availableFacets }) => {
     <div className="mb-4">
       <h3 className="font-semibold">Ingredients</h3>
       <ul>
-        {finalFacets.map((facet) => (
+     {finalFacets.map((facet) => ( 
           <li key={facet.value}>
             <label className="felx space-x-1">
               <input
                 type="checkbox"
-                id={facet.value}
-                value={facet.value}
+                id={facet.value || ""}
+                value={facet.value || ""}
                 onChange={handleFacetChange}
                 className="relative top-0.5"
-                checked={selectedFacets.includes(facet.value)}
+                checked={selectedFacets.includes(facet.value || "")}
               />
               <span>
                 {facet.value}({facet.hits})

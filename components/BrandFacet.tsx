@@ -1,13 +1,10 @@
 "use client";
 import React, { FC, useState, ChangeEvent } from "react";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
+import { BrandNameAndIdResultAvailableFacetValue } from "@relewise/client";
 
 interface BrandFacetProps {
-  availableFacets: {
-    value: { id: string; displayName: string };
-    hits: number;
-    selected: boolean;
-  }[];
+  availableFacets?: BrandNameAndIdResultAvailableFacetValue[] | null;
 }
 
 const BrandFacet: FC<BrandFacetProps> = ({ availableFacets }) => {
@@ -51,21 +48,23 @@ const BrandFacet: FC<BrandFacetProps> = ({ availableFacets }) => {
       <h3 className="font-semibold">Brands</h3>
       <ul>
         {availableFacets.map((facet) => (
-          <li key={facet.value.displayName}>
-            <label className="felx space-x-1">
-              <input
-                type="checkbox"
-                id={facet.value.id}
-                value={facet.value.displayName}
-                onChange={handleFacetChange}
-                className="relative top-0.5"
-                checked={selectedFacets.includes(facet.value.displayName)}
-              />
-              <span>
-                {facet.value.displayName}({facet.hits})
-              </span>
-            </label>
-          </li>
+          facet.value ? (
+            <li key={facet.value.displayName}>
+              <label className="flex space-x-1">
+                <input
+                  type="checkbox"
+                  id={facet.value.id || ""}
+                  value={facet.value.displayName || ""}
+                  onChange={handleFacetChange}
+                  className="relative top-0.5"
+                  checked={selectedFacets.includes(facet.value.displayName || "")}
+                />
+                <span>
+                  {facet.value.displayName} ({facet.hits})
+                </span>
+              </label>
+            </li>
+          ) : null
         ))}
       </ul>
     </div>

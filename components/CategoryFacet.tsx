@@ -1,13 +1,10 @@
 "use client";
 import React, { FC, useState, ChangeEvent } from "react";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
+import { CategoryNameAndIdResultAvailableFacetValue, StringCategoryNameAndIdResultValueFacetResult } from "@relewise/client";
 
 interface CategoryFacetProps {
-  availableFacets: {
-    value: { id: string; displayName: string };
-    hits: number;
-    selected: boolean;
-  }[];
+  availableFacets?: CategoryNameAndIdResultAvailableFacetValue[] | null;
 }
 
 const CategoryFacet: FC<CategoryFacetProps> = ({ availableFacets }) => {
@@ -50,19 +47,19 @@ const CategoryFacet: FC<CategoryFacetProps> = ({ availableFacets }) => {
     <div className="mb-4">
       <h3 className="font-semibold">Categories</h3>
       <ul>
-        {availableFacets.map((facet) => (
-          <li key={facet.value.displayName}>
+       {availableFacets.map((facet) => (
+          <li key={facet.value?.displayName}>
             <label className="felx space-x-1">
               <input
                 type="checkbox"
-                id={facet.value.id}
-                value={facet.value.displayName}
+                id={facet.value?.id || ""}
+                value={facet.value?.displayName || ""}
                 onChange={handleFacetChange}
                 className="relative top-0.5"
-                checked={selectedFacets.includes(facet.value.displayName)}
+                checked={selectedFacets.includes(facet.value?.displayName || "")}
               />
               <span>
-                {facet.value.displayName}({facet.hits})
+                {facet.value?.displayName}({facet.hits})
               </span>
             </label>
           </li>

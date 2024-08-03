@@ -1,12 +1,11 @@
 
 import SearchBar from "../../components/SearchBar";
-import { ProductSearchBuilder, Searcher } from "@relewise/client";
+import { BrandFacetResult, CategoryFacetResult, ProductDataStringValueFacetResult, ProductFacetResult, ProductSearchBuilder, Searcher } from "@relewise/client";
 import { getRelewiseUser } from "@/lib/relewiseTrackingUtils";
 import Card from "@/components/Card";
 import BrandFacet from "@/components/BrandFacet";
 import IngredientFacet from "@/components/IngredientFacet";
 import CategoryFacet from "@/components/CategoryFacet"
-import { valueFromAST } from "graphql";
 
 export default async function SearchPage({
   searchParams,
@@ -80,20 +79,19 @@ export default async function SearchPage({
   else if(query.length==0){
     result = await searcher.searchProducts(builder.build());  
   }
-
   
   
   const brandFacets = result?.facets?.items?.find((item) =>
     item.$type.includes("BrandFacetResult")
-  );
+  ) as BrandFacetResult | undefined;
 
   const ingredientFacets = result?.facets?.items?.find((item) =>
     item.$type.includes("ProductDataStringValueFacetResult")
-  );
+  ) as ProductDataStringValueFacetResult | undefined;
 
   const categoryFacets = result?.facets?.items?.find((item) =>
     item.$type.includes("CategoryFacetResult")
-  );
+  ) as CategoryFacetResult || undefined;
 
 
   const relewiseMappedProducts = result?.results?.map((result) => {
@@ -114,7 +112,6 @@ export default async function SearchPage({
   return (
     <main className="max-w-screen-2xl mx-auto">
       <SearchBar placeholder="Any product attribute..." />
-
       {relewiseMappedProducts && relewiseMappedProducts.length > 0 && (
         <>
         {/* <pre>{JSON.stringify(result?.facets?.items, null, 2)}</pre> */}
