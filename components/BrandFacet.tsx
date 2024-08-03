@@ -62,7 +62,7 @@ const BrandFacet: FC<BrandFacetProps> = ({ availableFacets }) => {
                 checked={selectedFacets.includes(facet.value.displayName)}
               />
               <span>
-                {facet.value.displayName}({facet.hits})
+                {facet.value.displayName} ({facet.hits})
               </span>
             </label>
           </li>
