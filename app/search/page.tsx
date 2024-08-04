@@ -76,17 +76,16 @@ export default async function SearchPage({
   }
   else if(query.length==0){
     result = await searcher.searchProducts(builder.build()); 
-    console.log(categoryParam)
   }
   
   
   const brandFacets = result?.facets?.items?.find((item) =>
     item.$type.includes("BrandFacetResult")
-  ) as BrandFacetResult | undefined;
+  ) as BrandFacetResult || undefined;
 
   const ingredientFacets = result?.facets?.items?.find((item) =>
     item.$type.includes("ProductDataStringValueFacetResult")
-  ) as ProductDataStringValueFacetResult | undefined;
+  ) as ProductDataStringValueFacetResult || undefined;
 
   const categoryFacets = result?.facets?.items?.find((item) =>
     item.$type.includes("CategoryFacetResult")
