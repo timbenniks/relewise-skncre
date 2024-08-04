@@ -19,11 +19,9 @@ export default async function SearchPage({
   };
 }) {
   const query = searchParams?.query || "";
-  const brandsParam = decodeURIComponent(searchParams?.brands || "").split(",");
-  const categoryParam = decodeURIComponent(searchParams?.categories || "").split(",");
-  const ingredientsParam = searchParams?.ingredients 
-  ? decodeURIComponent(searchParams.ingredients).split(",") 
-  : [];
+  const brandsParam = searchParams?.brands ? decodeURIComponent(searchParams.brands).split(",") : [];
+  const categoryParam = searchParams?.categories ? decodeURIComponent(searchParams?.categories || "").split(",") : [];
+  const ingredientsParam = searchParams?.ingredients ? decodeURIComponent(searchParams.ingredients).split(",") : [];
 
   const searcher = new Searcher(
     process.env.NEXT_PUBLIC_RELEWISE_DATASET_ID as string,
@@ -77,7 +75,8 @@ export default async function SearchPage({
       result = await searcher.searchProducts(builder.build());  
   }
   else if(query.length==0){
-    result = await searcher.searchProducts(builder.build());  
+    result = await searcher.searchProducts(builder.build()); 
+    console.log(categoryParam)
   }
   
   
@@ -111,6 +110,7 @@ export default async function SearchPage({
 
   return (
     <main className="max-w-screen-2xl mx-auto">
+  
       <SearchBar placeholder="Any product attribute..." />
       {relewiseMappedProducts && relewiseMappedProducts.length > 0 && (
         <>
