@@ -79,6 +79,7 @@ export default async function ProductList({ productId }: Props) {
                 url={`/pdp/${product.slug}`}
                 cta="BUY NOW"
                 small={true}
+                brand={product.brand}
               />
             );
           })}

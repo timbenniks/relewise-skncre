@@ -5,7 +5,7 @@ import { getPdp } from "@/queries/getPdp";
 import ComponentRenderer from "@/components/ComponentRenderer";
 import ProductDetail from "@/components/ProductDetail";
 import OthersBought from "../../../components/OthersBought";
-import RelatedProducts from "../../../components/RelatedProducts.tsx";
+import RelatedProducts from "../../../components/RelatedProducts";
 import { getRelewiseUser, relewiseTracker } from "../../../helpers";
 
 type Props = {
@@ -52,7 +52,7 @@ export default async function Home({
   );
 
   await relewiseTracker().trackProductView({
-    productId: prd?.skncreProduct?.productId,
+    productId: prd?.skncreProduct?.productId || "",
     user: getRelewiseUser(),
   });
 
@@ -62,8 +62,8 @@ export default async function Home({
       <section className="mb-12">
         <ComponentRenderer data={prd?.pdp.components} />
 
-        <RelatedProducts productId={prd?.skncreProduct?.productId} />
-        <OthersBought productId={prd?.skncreProduct?.productId} />
+        <RelatedProducts productId={prd?.skncreProduct?.productId || ""} />
+        <OthersBought productId={prd?.skncreProduct?.productId || ""} />
       </section>
     </main>
   );

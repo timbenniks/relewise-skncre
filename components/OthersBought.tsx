@@ -1,6 +1,6 @@
 import Card from "./Card";
 import {
-  ProductsViewedAfterViewingProductBuilder,
+  PurchasedWithProductBuilder,
   Recommender,
 } from "@relewise/client";
 
@@ -24,12 +24,11 @@ export default async function ProductList({ productId }: Props) {
     }
   );
 
-  const viewedAfterViewingbuilder =
-    new ProductsViewedAfterViewingProductBuilder(settings)
+  const purchasedWithProduct =
+    new PurchasedWithProductBuilder(settings)
       .setSelectedProductProperties({
         displayName: true,
         categoryPaths: true,
-        assortments: false,
         pricing: true,
         allData: false,
         viewedByUserInfo: false,
@@ -40,11 +39,15 @@ export default async function ProductList({ productId }: Props) {
         viewedByUserCompanyInfo: false,
         purchasedByUserCompanyInfo: false,
       })
-      .product({ productId })
+      .recommendVariant(false)
+      .allowReplacingOfRecentlyShownRecommendations(true)
+      .allowFillIfNecessaryToReachNumberOfRecommendations(true)
+      .prioritizeDiversityBetweenRequests(false)
+      .product({ productId: productId })
       .setNumberOfRecommendations(3);
 
-  const result = await recommender.recommendProductsViewedAfterViewingProduct(
-    viewedAfterViewingbuilder.build()
+  const result = await recommender.recommendPurchasedWithProduct(
+    purchasedWithProduct.build()
   );
 
   const relewiseMappedProducts = result?.recommendations?.map((result) => {
@@ -77,6 +80,7 @@ export default async function ProductList({ productId }: Props) {
                 image={product.image}
                 title={product.title}
                 url={`/pdp/${product.slug}`}
+                brand={product.brand}
                 cta="BUY NOW"
                 small={true}
               />
