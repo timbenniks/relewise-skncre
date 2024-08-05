@@ -4,7 +4,8 @@ import type { PdpQuery } from "@/gql/graphql";
 import { getPdp } from "@/queries/getPdp";
 import ComponentRenderer from "@/components/ComponentRenderer";
 import ProductDetail from "@/components/ProductDetail";
-import RecommendedProducts from "../../../components/RecommendedProducts";
+import OthersBought from "../../../components/OthersBought";
+import RelatedProducts from "../../../components/RelatedProducts.tsx";
 import { getRelewiseUser, relewiseTracker } from "../../../helpers";
 
 type Props = {
@@ -60,7 +61,9 @@ export default async function Home({
       <ProductDetail product={prd?.skncreProduct} />
       <section className="mb-12">
         <ComponentRenderer data={prd?.pdp.components} />
-        <RecommendedProducts productId={prd?.skncreProduct?.productId} />
+
+        <RelatedProducts productId={prd?.skncreProduct?.productId} />
+        <OthersBought productId={prd?.skncreProduct?.productId} />
       </section>
     </main>
   );
