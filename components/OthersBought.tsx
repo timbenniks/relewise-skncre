@@ -1,20 +1,15 @@
+import { getOptionsWithUser } from "@/lib/relewiseTrackingUtils";
 import Card from "./Card";
-import {
-  PurchasedWithProductBuilder,
-  Recommender,
-} from "@relewise/client";
+import { PurchasedWithProductBuilder, Recommender } from "@relewise/client";
 
 interface Props {
   productId: string;
 }
 
 export default async function ProductList({ productId }: Props) {
-  const settings = {
-    language: "en-gb",
-    currency: "EUR",
-    displayedAtLocation: "Product Details Page",
-    user: {},
-  };
+  const settings = getOptionsWithUser(
+    process.env.NEXT_PUBLIC_RELEWISE_USER as string
+  );
 
   const recommender = new Recommender(
     process.env.NEXT_PUBLIC_RELEWISE_DATASET_ID as string,
@@ -23,37 +18,35 @@ export default async function ProductList({ productId }: Props) {
       serverUrl: process.env.NEXT_PUBLIC_RELEWISE_SERVER_URL,
     }
   );
-console.log("productId: " + productId)
-  const purchasedWithProduct =
-    new PurchasedWithProductBuilder(settings)
-      .setSelectedProductProperties({
-        displayName: true,
-        categoryPaths: true,
-        pricing: true,
-        allData: false,
-        viewedByUserInfo: false,
-        purchasedByUserInfo: false,
-        brand: true,
-        allVariants: false,
-        dataKeys: ["slug", "image", "shortDescription"],
-        viewedByUserCompanyInfo: false,
-        purchasedByUserCompanyInfo: false,
-      })
-      .recommendVariant(false)
-      .allowReplacingOfRecentlyShownRecommendations(true)
-      .allowFillIfNecessaryToReachNumberOfRecommendations(true)
-      .prioritizeDiversityBetweenRequests(false)
-      .product({ productId: productId })
-    
-      .setNumberOfRecommendations(3);
-      
+  console.log("productId: " + productId);
+  const purchasedWithProduct = new PurchasedWithProductBuilder(settings)
+    .setSelectedProductProperties({
+      displayName: true,
+      categoryPaths: true,
+      pricing: true,
+      allData: false,
+      viewedByUserInfo: false,
+      purchasedByUserInfo: false,
+      brand: true,
+      allVariants: false,
+      dataKeys: ["slug", "image", "shortDescription"],
+      viewedByUserCompanyInfo: false,
+      purchasedByUserCompanyInfo: false,
+    })
+    .recommendVariant(false)
+    .allowReplacingOfRecentlyShownRecommendations(true)
+    .allowFillIfNecessaryToReachNumberOfRecommendations(true)
+    .prioritizeDiversityBetweenRequests(false)
+    .product({ productId: productId })
 
-console.log(purchasedWithProduct)
+    .setNumberOfRecommendations(3);
+
+  console.log(purchasedWithProduct);
 
   const result = await recommender.recommendPurchasedWithProduct(
     purchasedWithProduct.build()
   );
-//yconsole.log(result)
+  //yconsole.log(result)
   const relewiseMappedProducts = result?.recommendations?.map((result) => {
     return {
       key: result.productId,
@@ -83,7 +76,7 @@ console.log(purchasedWithProduct)
                 key={product.id}
                 image={product.image}
                 title={product.title}
-                url={ product.url}
+                url={product.url}
                 brand={product.brand}
                 cta="BUY NOW"
                 small={true}

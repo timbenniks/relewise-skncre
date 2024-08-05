@@ -1,20 +1,15 @@
+import { getOptionsWithUser } from "@/lib/relewiseTrackingUtils";
 import Card from "./Card";
-import {
-  PopularProductsBuilder,
-  Recommender,
-} from "@relewise/client";
+import { PopularProductsBuilder, Recommender } from "@relewise/client";
 
 interface Props {
   productId: string;
 }
 
 export default async function PopularProducts({ productId }: Props) {
-  const settings = {
-    language: "en-gb",
-    currency: "EUR",
-    displayedAtLocation: "Product Details Page",
-    user: {},
-  };
+  const settings = getOptionsWithUser(
+    process.env.NEXT_PUBLIC_RELEWISE_USER as string
+  );
 
   const recommender = new Recommender(
     process.env.NEXT_PUBLIC_RELEWISE_DATASET_ID as string,
@@ -24,24 +19,23 @@ export default async function PopularProducts({ productId }: Props) {
     }
   );
 
-  const popularProductsBuilder =
-    new PopularProductsBuilder(settings)
-      .setSelectedProductProperties({
-        displayName: true,
-        categoryPaths: true,
-        assortments: false,
-        pricing: true,
-        allData: false,
-        viewedByUserInfo: false,
-        purchasedByUserInfo: false,
-        brand: true,
-        allVariants: false,
-        dataKeys: ["slug", "image", "shortDescription"],
-        viewedByUserCompanyInfo: false,
-        purchasedByUserCompanyInfo: false,
-      })
-      .basedOn("MostViewed")
-      .setNumberOfRecommendations(3);
+  const popularProductsBuilder = new PopularProductsBuilder(settings)
+    .setSelectedProductProperties({
+      displayName: true,
+      categoryPaths: true,
+      assortments: false,
+      pricing: true,
+      allData: false,
+      viewedByUserInfo: false,
+      purchasedByUserInfo: false,
+      brand: true,
+      allVariants: false,
+      dataKeys: ["slug", "image", "shortDescription"],
+      viewedByUserCompanyInfo: false,
+      purchasedByUserCompanyInfo: false,
+    })
+    .basedOn("MostViewed")
+    .setNumberOfRecommendations(3);
 
   const result = await recommender.recommendPopularProducts(
     popularProductsBuilder.build()

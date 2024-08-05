@@ -8,7 +8,7 @@ export default function GlobalHeader() {
           <span className="font-bold font-title text-3xl self-end">skncre</span>
         </Link>
         <nav className="flex flex-wrap gap-x-6 gap-y-2 items-center md:text-xl">
-          <Link href="/search">Search</Link>
+          <Link href="/search">search</Link>
           <Link href="/plp/Facial Care">facial care</Link>
           <Link href="/plp/Body Care">body care</Link>
           <Link href="/plp/Special Treatments">special treatments</Link>

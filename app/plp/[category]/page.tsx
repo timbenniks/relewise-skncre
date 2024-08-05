@@ -4,6 +4,7 @@ import { getSkncreProducts } from "@/queries/getSkncreProducts";
 import Card from "../../../components/Card";
 import { ProductSearchBuilder, Searcher, UserFactory } from "@relewise/client";
 import { getRelewiseUser, relewiseTracker } from "../../../helpers";
+import { getOptionsWithUser } from "@/lib/relewiseTrackingUtils";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -31,10 +32,7 @@ export default async function Plp({
   // });
 
   const settings = {
-    language: "en-gb",
-    currency: "EUR",
-    displayedAtLocation: "Product list Page",
-    user: getRelewiseUser(),
+    ...getOptionsWithUser(process.env.NEXT_PUBLIC_RELEWISE_USER as string),
     take: 100,
     skip: 0,
   };

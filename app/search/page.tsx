@@ -1,11 +1,16 @@
-
 import SearchBar from "../../components/SearchBar";
-import { BrandFacetResult, CategoryFacetResult, ProductDataStringValueFacetResult, ProductFacetResult, ProductSearchBuilder, Searcher } from "@relewise/client";
-import { getRelewiseUser } from "@/lib/relewiseTrackingUtils";
+import {
+  BrandFacetResult,
+  CategoryFacetResult,
+  ProductDataStringValueFacetResult,
+  ProductSearchBuilder,
+  Searcher,
+} from "@relewise/client";
+import { getOptionsWithUser } from "@/lib/relewiseTrackingUtils";
 import Card from "@/components/Card";
 import BrandFacet from "@/components/BrandFacet";
 import IngredientFacet from "@/components/IngredientFacet";
-import CategoryFacet from "@/components/CategoryFacet"
+import CategoryFacet from "@/components/CategoryFacet";
 
 export default async function SearchPage({
   searchParams,
@@ -14,14 +19,20 @@ export default async function SearchPage({
     query?: string;
     brands?: string;
     ingredients?: string;
-    categories?:string;
+    categories?: string;
     page?: string;
   };
 }) {
   const query = searchParams?.query || "";
-  const brandsParam = searchParams?.brands ? decodeURIComponent(searchParams.brands).split(",") : [];
-  const categoryParam = searchParams?.categories ? decodeURIComponent(searchParams?.categories || "").split(",") : [];
-  const ingredientsParam = searchParams?.ingredients ? decodeURIComponent(searchParams.ingredients).split(",") : [];
+  const brandsParam = searchParams?.brands
+    ? decodeURIComponent(searchParams.brands).split(",")
+    : [];
+  const categoryParam = searchParams?.categories
+    ? decodeURIComponent(searchParams?.categories || "").split(",")
+    : [];
+  const ingredientsParam = searchParams?.ingredients
+    ? decodeURIComponent(searchParams.ingredients).split(",")
+    : [];
 
   const searcher = new Searcher(
     process.env.NEXT_PUBLIC_RELEWISE_DATASET_ID as string,
@@ -31,66 +42,62 @@ export default async function SearchPage({
     }
   );
 
-  const settings = {
-    language: "en-gb",
-    currency: "EUR",
-    displayedAtLocation: "Search Page",
-    user: getRelewiseUser(),
-  };
+  const settings = getOptionsWithUser(
+    process.env.NEXT_PUBLIC_RELEWISE_USER as string
+  );
 
   let builder;
   let result;
   builder = new ProductSearchBuilder(settings)
-  .setSelectedProductProperties({
-    displayName: true,
-    categoryPaths: true,
-    assortments: false,
-    pricing: true,
-    allData: false,
-    viewedByUserInfo: false,
-    purchasedByUserInfo: false,
-    brand: true,
-    allVariants: false,
-    dataKeys: ["slug", "image", "shortDescription"],
-    viewedByUserCompanyInfo: false,
-    purchasedByUserCompanyInfo: false,
-  })
-  .setTerm(null)
-  .pagination((p) => p.setPageSize(30).setPage(1))
-  .facets((f) =>
-    f
-      .addBrandFacet(brandsParam)
-      .addProductDataStringValueFacet(
-        "ingredients",
-        "Product",
-        ingredientsParam
-      )
-      .addSalesPriceRangeFacet("Product")
-      .addCategoryFacet("ImmediateParent", categoryParam)
-  );
+    .setSelectedProductProperties({
+      displayName: true,
+      categoryPaths: true,
+      assortments: false,
+      pricing: true,
+      allData: false,
+      viewedByUserInfo: false,
+      purchasedByUserInfo: false,
+      brand: true,
+      allVariants: false,
+      dataKeys: ["slug", "image", "shortDescription"],
+      viewedByUserCompanyInfo: false,
+      purchasedByUserCompanyInfo: false,
+    })
+    .setTerm(null)
+    .pagination((p) => p.setPageSize(30).setPage(1))
+    .facets((f) =>
+      f
+        .addBrandFacet(brandsParam)
+        .addProductDataStringValueFacet(
+          "ingredients",
+          "Product",
+          ingredientsParam
+        )
+        .addSalesPriceRangeFacet("Product")
+        .addCategoryFacet("ImmediateParent", categoryParam)
+    );
 
   if (query && query.length > 0) {
-
-      builder.setTerm(query);
-      result = await searcher.searchProducts(builder.build());  
+    builder.setTerm(query);
+    result = await searcher.searchProducts(builder.build());
+  } else if (query.length == 0) {
+    result = await searcher.searchProducts(builder.build());
   }
-  else if(query.length==0){
-    result = await searcher.searchProducts(builder.build()); 
-  }
-  
-  
-  const brandFacets = result?.facets?.items?.find((item) =>
-    item.$type.includes("BrandFacetResult")
-  ) as BrandFacetResult || undefined;
 
-  const ingredientFacets = result?.facets?.items?.find((item) =>
-    item.$type.includes("ProductDataStringValueFacetResult")
-  ) as ProductDataStringValueFacetResult || undefined;
+  const brandFacets =
+    (result?.facets?.items?.find((item) =>
+      item.$type.includes("BrandFacetResult")
+    ) as BrandFacetResult) || undefined;
 
-  const categoryFacets = result?.facets?.items?.find((item) =>
-    item.$type.includes("CategoryFacetResult")
-  ) as CategoryFacetResult || undefined;
+  const ingredientFacets =
+    (result?.facets?.items?.find((item) =>
+      item.$type.includes("ProductDataStringValueFacetResult")
+    ) as ProductDataStringValueFacetResult) || undefined;
 
+  const categoryFacets =
+    (result?.facets?.items?.find((item) =>
+      item.$type.includes("CategoryFacetResult")
+    ) as CategoryFacetResult) || undefined;
 
   const relewiseMappedProducts = result?.results?.map((result) => {
     return {
@@ -109,7 +116,6 @@ export default async function SearchPage({
 
   return (
     <main className="max-w-screen-2xl mx-auto">
-  
       <SearchBar placeholder="Any product attribute..." />
       {relewiseMappedProducts && relewiseMappedProducts.length > 0 && (
         <>

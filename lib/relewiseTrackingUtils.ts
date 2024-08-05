@@ -15,3 +15,39 @@ export const relewiseTracker = () => {
 
   return tracker;
 };
+
+export function getOptionsWithUser(user: string | "none" | "bennich" | "benniks") {
+  const users: any = [];
+
+  users["none"] = {}
+  users["bennich"] = {
+    "authenticatedId": "8298a53e-fd1d-4397-8b30-bc1cd84b27c0",
+    "email": "christian@relewise.com",
+    "classifications": {
+      "snailpreference": "true",
+    },
+    "identifiers": {},
+    "data": {},
+    "company": {
+      "id": "Relewise"
+    }
+  },
+    users["benniks"] = {
+      "authenticatedId": "8298a53e-fd1d-4397-8b30-bc1cd84b27c4",
+      "email": "tim.benniks@hygraph.com",
+      "classifications": {
+        "snailpreference": "false",
+      },
+      "identifiers": {},
+      "data": {},
+      "company": {
+        "id": "Hygraph"
+      }
+    }
+
+  return {
+    language: "en-gb",
+    currency: "EUR",
+    user: users[user],
+  }
+}
