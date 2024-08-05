@@ -7,9 +7,7 @@ interface Props {
 }
 
 export default async function PopularProducts({ productId }: Props) {
-  const settings = getOptionsWithUser(
-    process.env.NEXT_PUBLIC_RELEWISE_USER as string
-  );
+  const settings = getOptionsWithUser("anonymous", "Hygraph Demo - PDP");
 
   const recommender = new Recommender(
     process.env.NEXT_PUBLIC_RELEWISE_DATASET_ID as string,
@@ -40,7 +38,7 @@ export default async function PopularProducts({ productId }: Props) {
   const result = await recommender.recommendPopularProducts(
     popularProductsBuilder.build()
   );
-
+console.log(result);
   const relewiseMappedProducts = result?.recommendations?.map((result) => {
     return {
       key: result.productId,

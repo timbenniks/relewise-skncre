@@ -16,13 +16,13 @@ export const relewiseTracker = () => {
   return tracker;
 };
 
-export function getOptionsWithUser(user: string | "none" | "bennich" | "benniks" | "hygraph", displayedAtLocation: string) {
+export function getOptionsWithUser(user: string | "anonymous" | "bennich" | "benniks" | "hygraph", displayedAtLocation: string) {
   const users: any = [];
 
-  users["none"] = {}
+  users["anonymous"] = UserFactory.anonymous(),
   users["bennich"] = {
     "authenticatedId": "8298a53e-fd1d-4397-8b30-bc1cd84b27c0",
-    "email": "christian@relewise.com",
+    "email": "christianb@relewise.com",
     "classifications": {
       "snailpreference": "true",
     },

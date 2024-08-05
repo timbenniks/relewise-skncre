@@ -11,6 +11,7 @@ import Card from "@/components/Card";
 import BrandFacet from "@/components/BrandFacet";
 import IngredientFacet from "@/components/IngredientFacet";
 import CategoryFacet from "@/components/CategoryFacet";
+import { unstable_noStore as noStore } from 'next/cache';
 
 export default async function SearchPage({
   searchParams,
@@ -23,6 +24,8 @@ export default async function SearchPage({
     page?: string;
   };
 }) {
+  noStore();//forcing next.js to NOT cache the page....
+
   const query = searchParams?.query || "";
   const brandsParam = searchParams?.brands
     ? decodeURIComponent(searchParams.brands).split(",")
@@ -42,7 +45,10 @@ export default async function SearchPage({
     }
   );
 
-  const settings = getOptionsWithUser("bennich", "Hygraph Demo - Search Page");
+  //const settings = getOptionsWithUser("anonymous", "Hygraph Demo - Search Page");
+  //const settings = getOptionsWithUser("benniks", "Hygraph Demo - Search Page");
+  const settings = getOptionsWithUser("hygraph", "Hygraph Demo - Search Page");
+  //const settings = getOptionsWithUser("bennich", "Hygraph Demo - Search Page");
 
   let builder;
   let result;
@@ -63,6 +69,7 @@ export default async function SearchPage({
     })
     .setTerm(null)
     .pagination((p) => p.setPageSize(30).setPage(1))
+   // .relevanceModifiers(modifier => modifier.addProductRecentlyPurchasedByUserCompanyRelevanceModifier(750, 15))
     .facets((f) =>
       f
         .addBrandFacet(brandsParam)
