@@ -8,7 +8,7 @@ interface Props {
 
 export default async function ProductList({ productId }: Props) {
   const settings = getOptionsWithUser(
-    process.env.NEXT_PUBLIC_RELEWISE_USER as string
+    process.env.NEXT_PUBLIC_RELEWISE_USER as string, "Hygraph Demo - PDP"
   );
 
   const recommender = new Recommender(
@@ -18,7 +18,7 @@ export default async function ProductList({ productId }: Props) {
       serverUrl: process.env.NEXT_PUBLIC_RELEWISE_SERVER_URL,
     }
   );
-  console.log("productId: " + productId);
+
   const purchasedWithProduct = new PurchasedWithProductBuilder(settings)
     .setSelectedProductProperties({
       displayName: true,
@@ -41,12 +41,10 @@ export default async function ProductList({ productId }: Props) {
 
     .setNumberOfRecommendations(3);
 
-  console.log(purchasedWithProduct);
-
   const result = await recommender.recommendPurchasedWithProduct(
     purchasedWithProduct.build()
   );
-  //yconsole.log(result)
+
   const relewiseMappedProducts = result?.recommendations?.map((result) => {
     return {
       key: result.productId,

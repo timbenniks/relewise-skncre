@@ -32,7 +32,7 @@ export default async function Plp({
   // });
 
   const settings = {
-    ...getOptionsWithUser(process.env.NEXT_PUBLIC_RELEWISE_USER as string),
+    ...getOptionsWithUser(process.env.NEXT_PUBLIC_RELEWISE_USER as string, "Hygraph Demo - PLP"),
     take: 100,
     skip: 0,
   };
