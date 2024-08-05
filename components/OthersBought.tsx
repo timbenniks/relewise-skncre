@@ -64,7 +64,7 @@ export default async function ProductList({ productId }: Props) {
       price: result?.listPrice,
     };
   });
-
+console.log(relewiseMappedProducts)
   return (
     <section className="bg-tertiary">
       <h3 className="text-5xl pt-12 mb-12 font-bold font-title text-center">
@@ -79,7 +79,7 @@ export default async function ProductList({ productId }: Props) {
                 key={product.id}
                 image={product.image}
                 title={product.title}
-                url={`/pdp/${product.slug}`}
+                url={ product.url}
                 brand={product.brand}
                 cta="BUY NOW"
                 small={true}

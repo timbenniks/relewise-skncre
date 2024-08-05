@@ -76,7 +76,7 @@ export default async function ProductList({ productId }: Props) {
                 key={product.id}
                 image={product.image}
                 title={product.title}
-                url={`/pdp/${product.slug}`}
+                url={product.url}
                 cta="BUY NOW"
                 small={true}
                 brand={product.brand}
