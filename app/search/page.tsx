@@ -42,9 +42,7 @@ export default async function SearchPage({
     }
   );
 
-  const settings = getOptionsWithUser(
-    process.env.NEXT_PUBLIC_RELEWISE_USER as string
-  );
+  const settings = getOptionsWithUser("bennich", "Hygraph Demo - Search Page");
 
   let builder;
   let result;

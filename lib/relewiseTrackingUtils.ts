@@ -16,7 +16,7 @@ export const relewiseTracker = () => {
   return tracker;
 };
 
-export function getOptionsWithUser(user: string | "none" | "bennich" | "benniks") {
+export function getOptionsWithUser(user: string | "none" | "bennich" | "benniks" | "hygraph", displayedAtLocation: string) {
   const users: any = [];
 
   users["none"] = {}
@@ -43,11 +43,21 @@ export function getOptionsWithUser(user: string | "none" | "bennich" | "benniks"
       "company": {
         "id": "Hygraph"
       }
+    },
+    users["hygraph"] = {
+      "authenticatedId": "8298a53e-fd1d-4397-8b30-bc1cd84b27d5",
+      "email": "someone@hygraph.com",
+      "identifiers": {},
+      "data": {},
+      "company": {
+        "id": "Hygraph"
+      }
     }
 
   return {
     language: "en-gb",
     currency: "EUR",
+    displayedAtLocation: displayedAtLocation,
     user: users[user],
   }
 }
