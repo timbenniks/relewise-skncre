@@ -23,7 +23,7 @@ export default async function ProductList({ productId }: Props) {
       serverUrl: process.env.NEXT_PUBLIC_RELEWISE_SERVER_URL,
     }
   );
-
+console.log("productId: " + productId)
   const purchasedWithProduct =
     new PurchasedWithProductBuilder(settings)
       .setSelectedProductProperties({
@@ -44,12 +44,16 @@ export default async function ProductList({ productId }: Props) {
       .allowFillIfNecessaryToReachNumberOfRecommendations(true)
       .prioritizeDiversityBetweenRequests(false)
       .product({ productId: productId })
+    
       .setNumberOfRecommendations(3);
+      
+
+console.log(purchasedWithProduct)
 
   const result = await recommender.recommendPurchasedWithProduct(
     purchasedWithProduct.build()
   );
-
+//yconsole.log(result)
   const relewiseMappedProducts = result?.recommendations?.map((result) => {
     return {
       key: result.productId,
@@ -64,7 +68,7 @@ export default async function ProductList({ productId }: Props) {
       price: result?.listPrice,
     };
   });
-console.log(relewiseMappedProducts)
+
   return (
     <section className="bg-tertiary">
       <h3 className="text-5xl pt-12 mb-12 font-bold font-title text-center">
