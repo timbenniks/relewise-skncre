@@ -19,7 +19,7 @@ export default async function ProductList({ productId }: Props) {
     }
   );
 
-  const purchasedWithProduct = new PurchasedWithProductBuilder(settings)
+  const builder = new PurchasedWithProductBuilder(settings)
     .setSelectedProductProperties({
       displayName: true,
       categoryPaths: true,
@@ -41,8 +41,11 @@ export default async function ProductList({ productId }: Props) {
 
     .setNumberOfRecommendations(3);
 
-  const result = await recommender.recommendPurchasedWithProduct(
-    purchasedWithProduct.build()
+    var preppedQuery = builder.build();
+    preppedQuery.custom = {timestamp: Date.now().toString()};
+
+    const result = await recommender.recommendPurchasedWithProduct(
+      preppedQuery
   );
 
   const relewiseMappedProducts = result?.recommendations?.map((result) => {

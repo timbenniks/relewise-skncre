@@ -26,7 +26,7 @@ export default async function SearchPage({
 }) {
   noStore();//forcing next.js to NOT cache the page....
 
-  const query = searchParams?.query || "";
+  const query = searchParams?.query || null;
   const brandsParam = searchParams?.brands
     ? decodeURIComponent(searchParams.brands).split(",")
     : [];
@@ -68,7 +68,7 @@ export default async function SearchPage({
       viewedByUserCompanyInfo: false,
       purchasedByUserCompanyInfo: false,
     })
-    .setTerm(null)
+    .setTerm(query)
     .pagination((p) => p.setPageSize(30).setPage(1))
    // .relevanceModifiers(modifier => modifier.addProductRecentlyPurchasedByUserCompanyRelevanceModifier(750, 15))
     .facets((f) =>
@@ -82,14 +82,17 @@ export default async function SearchPage({
         .addSalesPriceRangeFacet("Product")
         .addCategoryFacet("ImmediateParent", categoryParam)
     );
+  
+    var preppedQuery = builder.build();
+    preppedQuery.custom = {timestamp: Date.now().toString()};
 
-  if (query && query.length > 0) {
+  if (query) {
     builder.setTerm(query);
-    result = await searcher.searchProducts(builder.build());
-  } else if (query.length == 0) {
-    result = await searcher.searchProducts(builder.build());
+    result = await searcher.searchProducts(preppedQuery);
+  } else {
+    result = await searcher.searchProducts(preppedQuery);
   }
-
+console.log(result);
   const brandFacets =
     (result?.facets?.items?.find((item) =>
       item.$type.includes("BrandFacetResult")

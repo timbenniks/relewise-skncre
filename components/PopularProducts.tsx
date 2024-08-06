@@ -17,7 +17,7 @@ export default async function PopularProducts({ productId }: Props) {
     }
   );
 
-  const popularProductsBuilder = new PopularProductsBuilder(settings)
+  const builder = new PopularProductsBuilder(settings)
     .setSelectedProductProperties({
       displayName: true,
       categoryPaths: true,
@@ -35,8 +35,11 @@ export default async function PopularProducts({ productId }: Props) {
     .basedOn("MostViewed")
     .setNumberOfRecommendations(3);
 
+    var preppedQuery = builder.build();
+    preppedQuery.custom = {timestamp: Date.now().toString()};
+
   const result = await recommender.recommendPopularProducts(
-    popularProductsBuilder.build()
+    preppedQuery
   );
 
   const relewiseMappedProducts = result?.recommendations?.map((result) => {

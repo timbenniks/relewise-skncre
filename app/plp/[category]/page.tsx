@@ -36,6 +36,13 @@ export default async function Plp({
     take: 100,
     skip: 0,
   };
+  const searcher = new Searcher(
+    process.env.NEXT_PUBLIC_RELEWISE_DATASET_ID as string,
+    process.env.NEXT_PUBLIC_RELEWISE_API_KEY as string,
+    {
+      serverUrl: process.env.NEXT_PUBLIC_RELEWISE_SERVER_URL,
+    }
+  );
 
   const cat = decodeURIComponent(params.category);
 
@@ -66,15 +73,10 @@ export default async function Plp({
       )
     );
 
-  const searcher = new Searcher(
-    process.env.NEXT_PUBLIC_RELEWISE_DATASET_ID as string,
-    process.env.NEXT_PUBLIC_RELEWISE_API_KEY as string,
-    {
-      serverUrl: process.env.NEXT_PUBLIC_RELEWISE_SERVER_URL,
-    }
-  );
+    var preppedQuery = builder.build();
+    preppedQuery.custom = {timestamp: Date.now().toString()};
 
-  const result = await searcher.searchProducts(builder.build());
+  const result = await searcher.searchProducts(preppedQuery);
 
   const relewiseMappedProducts = result?.results?.map((result) => {
     return {
