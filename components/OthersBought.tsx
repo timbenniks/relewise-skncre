@@ -42,7 +42,8 @@ export default async function ProductList({ productId }: Props) {
     const result = await recommender.recommendPurchasedWithProduct(
       preppedQuery
   );
-
+  
+  //Map to exsiting hygraph component data structure
   const relewiseMappedProducts = MapToHygraphDatastructure(result?.recommendations);
 
   return (

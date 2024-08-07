@@ -36,6 +36,7 @@ export default async function PopularProducts({ productId }: Props) {
     preppedQuery
   );
 
+  //Map to exsiting hygraph component data structure
   const relewiseMappedProducts = MapToHygraphDatastructure(result?.recommendations);
 
   return (
