@@ -5,7 +5,11 @@ import {
   ProductDataStringValueFacetResult,
   ProductSearchBuilder,
 } from "@relewise/client";
-import { getOptionsWithUser, MapToHygraphDatastructure, relewiseSearcher } from "@/lib/relewiseTrackingUtils";
+import {
+  getOptionsWithUser,
+  MapToHygraphDatastructure,
+  relewiseSearcher,
+} from "@/lib/relewiseTrackingUtils";
 import Card from "@/components/Card";
 import BrandFacet from "@/components/BrandFacet";
 import IngredientFacet from "@/components/IngredientFacet";
@@ -23,7 +27,6 @@ export default async function SearchPage({
     page?: string;
   };
 }) {
-
   const query = searchParams?.query || null;
   const brandsParam = searchParams?.brands
     ? decodeURIComponent(searchParams.brands).split(",")
@@ -37,7 +40,10 @@ export default async function SearchPage({
 
   const searcher = relewiseSearcher();
 
-  const settings = getOptionsWithUser(process.env.NEXT_PUBLIC_RELEWISE_USER as string, "Hygraph Demo - Search Page");
+  const settings = getOptionsWithUser(
+    process.env.NEXT_PUBLIC_RELEWISE_USER as string,
+    "Hygraph Demo - Search Page"
+  );
 
   let builder;
   let result;
@@ -69,9 +75,9 @@ export default async function SearchPage({
         .addSalesPriceRangeFacet("Product")
         .addCategoryFacet("ImmediateParent", categoryParam)
     );
-  
-    var preppedQuery = builder.build();
-    preppedQuery.custom = {timestamp: Date.now().toString()};
+
+  var preppedQuery = builder.build();
+  preppedQuery.custom = { timestamp: Date.now().toString() };
 
   if (query) {
     builder.setTerm(query);
@@ -95,16 +101,18 @@ export default async function SearchPage({
       item.$type.includes("CategoryFacetResult")
     ) as CategoryFacetResult) || undefined;
 
-    const relewiseMappedProducts = MapToHygraphDatastructure(result?.results);
+  const relewiseMappedProducts = MapToHygraphDatastructure(result?.results);
 
   return (
     <main className="max-w-screen-2xl mx-auto">
       <SearchBar placeholder="Any product attribute..." />
       {relewiseMappedProducts && relewiseMappedProducts.length > 0 && (
         <>
-          <h3 className="text-5xl pt-12 mb-12 font-bold font-title text-center">
-            Search result - server response time: {result?.statistics?.serverTimeInMs} ms
-          </h3>
+          <p className="my-4">
+            Server response:{" "}
+            <strong>{result?.statistics?.serverTimeInMs} ms</strong>
+          </p>
+
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
             <aside className="md:col-span-2">
               <h2 className="text-2xl font-bold mb-4">Filter by:</h2>
@@ -115,17 +123,25 @@ export default async function SearchPage({
 
             <section className="md:col-span-10 mb-12">
               <div className="grid gap-6 pb-32 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 md:gap-12">
-                {relewiseMappedProducts.map((product: { key: Key | null | undefined; image: { url: string; }; title: string; url: string; brand: any; }) => (
-                  <Card
-                    key={product.key}
-                    image={product.image}
-                    title={product.title}
-                    url={product.url}
-                    brand={product.brand || ""}
-                    cta="BUY NOW"
-                    small={true}
-                  />
-                ))}
+                {relewiseMappedProducts.map(
+                  (product: {
+                    key: Key | null | undefined;
+                    image: { url: string };
+                    title: string;
+                    url: string;
+                    brand: any;
+                  }) => (
+                    <Card
+                      key={product.key}
+                      image={product.image}
+                      title={product.title}
+                      url={product.url}
+                      brand={product.brand || ""}
+                      cta="BUY NOW"
+                      small={true}
+                    />
+                  )
+                )}
               </div>
             </section>
           </div>

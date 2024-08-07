@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import Card from "../../../components/Card";
 import { ProductSearchBuilder } from "@relewise/client";
 import { getRelewiseUser, relewiseTracker } from "../../../helpers";
-import { getOptionsWithUser, MapToHygraphDatastructure, relewiseSearcher } from "@/lib/relewiseTrackingUtils";
+import {
+  getOptionsWithUser,
+  MapToHygraphDatastructure,
+  relewiseSearcher,
+} from "@/lib/relewiseTrackingUtils";
 import { Key } from "react";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -17,9 +21,11 @@ export default async function Plp({
 }: {
   params: { category: string };
 }) {
-
   const settings = {
-    ...getOptionsWithUser(process.env.NEXT_PUBLIC_RELEWISE_USER as string, "Hygraph Demo - PLP"),
+    ...getOptionsWithUser(
+      process.env.NEXT_PUBLIC_RELEWISE_USER as string,
+      "Hygraph Demo - PLP"
+    ),
     take: 100,
     skip: 0,
   };
@@ -54,8 +60,8 @@ export default async function Plp({
       )
     );
 
-    var preppedQuery = builder.build();
-    preppedQuery.custom = {timestamp: Date.now().toString()};
+  var preppedQuery = builder.build();
+  preppedQuery.custom = { timestamp: Date.now().toString() };
 
   const result = await searcher.searchProducts(preppedQuery);
 
@@ -66,24 +72,33 @@ export default async function Plp({
     <main className="max-w-screen-2xl mx-auto">
       <section className="mb-12">
         <h3 className="text-5xl pt-12 mb-12 font-bold font-title text-center">
-          Product List for {cat}  - server response: {result?.statistics?.serverTimeInMs} ms
+          Product List for {cat}
         </h3>
+        <p>Server response: {result?.statistics?.serverTimeInMs} ms</p>
 
         <div className="grid gap-6 mx-12 pb-32 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 md:gap-12">
           {relewiseMappedProducts &&
-            relewiseMappedProducts.map((product: { key: Key | null | undefined; image: { url: string; }; title: string; url: string; brand: any; }) => {
-              return (
-                <Card
-                  key={product.key}
-                  image={product.image}
-                  title={product.title as string}
-                  url={product.url}
-                  cta="BUY NOW"
-                  small={true}
-                  brand={product.brand || ""}
-                />
-              );
-            })}
+            relewiseMappedProducts.map(
+              (product: {
+                key: Key | null | undefined;
+                image: { url: string };
+                title: string;
+                url: string;
+                brand: any;
+              }) => {
+                return (
+                  <Card
+                    key={product.key}
+                    image={product.image}
+                    title={product.title as string}
+                    url={product.url}
+                    cta="BUY NOW"
+                    small={true}
+                    brand={product.brand || ""}
+                  />
+                );
+              }
+            )}
         </div>
       </section>
     </main>
