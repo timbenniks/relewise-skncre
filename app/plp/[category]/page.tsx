@@ -71,10 +71,13 @@ export default async function Plp({
   return (
     <main className="max-w-screen-2xl mx-auto">
       <section className="mb-12">
-        <h3 className="text-5xl pt-12 mb-12 font-bold font-title text-center">
+        <h3 className="text-5xl pt-12 mb-4 font-bold font-title text-center">
           Product List for {cat}
         </h3>
-        <p>Server response: {result?.statistics?.serverTimeInMs} ms</p>
+        <p className="text-center mb-12">
+          Server response:{" "}
+          <strong>{result?.statistics?.serverTimeInMs} ms</strong>
+        </p>
 
         <div className="grid gap-6 mx-12 pb-32 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 md:gap-12">
           {relewiseMappedProducts &&
