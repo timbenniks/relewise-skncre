@@ -33,6 +33,7 @@ export default function ProductList({
         },
         title: product.name,
         slug: product.slug,
+        brand: product.brand ? product.brand : "",
       };
     }
   );
@@ -56,6 +57,7 @@ export default function ProductList({
                 title={product.title}
                 url={`/pdp/${product.slug}`}
                 cta="BUY NOW"
+                brand={product.brand}
               />
             );
           })}

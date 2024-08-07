@@ -16,7 +16,7 @@ interface Props {
   };
 }
 
-export default function ProductDetail({ product }: Props) {
+export default function ProductDetail({ product }: any) {
   return (
     <section className="bg-light product-detail pb-12">
       <div className="grid grid-cols-2">

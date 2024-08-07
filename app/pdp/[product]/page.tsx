@@ -61,7 +61,7 @@ export default async function Home({
     <main className="max-w-screen-2xl mx-auto">
       <ProductDetail product={prd?.skncreProduct} />
       <section className="mb-12">
-        <ComponentRenderer data={prd?.pdp.components} />
+        <ComponentRenderer data={prd?.pdp?.components} />
 
         <PopularProducts productId={prd?.skncreProduct?.productId || ""} />
         <OthersBought productId={prd?.skncreProduct?.productId || ""} />
