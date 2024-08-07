@@ -6,7 +6,7 @@ import {
   ProductSearchBuilder,
   Searcher,
 } from "@relewise/client";
-import { getOptionsWithUser } from "@/lib/relewiseTrackingUtils";
+import { getOptionsWithUser, relewiseSearcher } from "@/lib/relewiseTrackingUtils";
 import Card from "@/components/Card";
 import BrandFacet from "@/components/BrandFacet";
 import IngredientFacet from "@/components/IngredientFacet";
@@ -37,13 +37,7 @@ export default async function SearchPage({
     ? decodeURIComponent(searchParams.ingredients).split(",")
     : [];
 
-  const searcher = new Searcher(
-    process.env.NEXT_PUBLIC_RELEWISE_DATASET_ID as string,
-    process.env.NEXT_PUBLIC_RELEWISE_API_KEY as string,
-    {
-      serverUrl: process.env.NEXT_PUBLIC_RELEWISE_SERVER_URL,
-    }
-  );
+  const searcher = relewiseSearcher();
 
   const settings = getOptionsWithUser(process.env.NEXT_PUBLIC_RELEWISE_USER as string, "Hygraph Demo - Search Page");
   //const settings = getOptionsWithUser("anonymous", "Hygraph Demo - Search Page");

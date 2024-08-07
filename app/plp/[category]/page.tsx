@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import type { SkncreProductsQuery } from "@/gql/graphql";
 import { getSkncreProducts } from "@/queries/getSkncreProducts";
 import Card from "../../../components/Card";
-import { ProductSearchBuilder, Searcher, UserFactory } from "@relewise/client";
+import { ProductSearchBuilder, ProductSearchResponse, Searcher, UserFactory } from "@relewise/client";
 import { getRelewiseUser, relewiseTracker } from "../../../helpers";
-import { getOptionsWithUser } from "@/lib/relewiseTrackingUtils";
+import { getOptionsWithUser, MapToHygraphDatastructure, relewiseSearcher } from "@/lib/relewiseTrackingUtils";
+import { Key } from "react";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -18,31 +19,13 @@ export default async function Plp({
 }: {
   params: { category: string };
 }) {
-  // const { skncreProducts }: SkncreProductsQuery = await getSkncreProducts();
-
-  // const mappedProducts = skncreProducts.map((product) => {
-  //   return {
-  //     key: product.productId,
-  //     image: {
-  //       url: product.images[0],
-  //     },
-  //     title: product.name,
-  //     url: `/pdp/${product.slug}`,
-  //   };
-  // });
 
   const settings = {
     ...getOptionsWithUser(process.env.NEXT_PUBLIC_RELEWISE_USER as string, "Hygraph Demo - PLP"),
     take: 100,
     skip: 0,
   };
-  const searcher = new Searcher(
-    process.env.NEXT_PUBLIC_RELEWISE_DATASET_ID as string,
-    process.env.NEXT_PUBLIC_RELEWISE_API_KEY as string,
-    {
-      serverUrl: process.env.NEXT_PUBLIC_RELEWISE_SERVER_URL,
-    }
-  );
+  const searcher = relewiseSearcher();
 
   const cat = decodeURIComponent(params.category);
 
@@ -78,20 +61,8 @@ export default async function Plp({
 
   const result = await searcher.searchProducts(preppedQuery);
 
-  const relewiseMappedProducts = result?.results?.map((result) => {
-    return {
-      key: result.productId,
-      image: {
-        url: result?.data?.image.value,
-      },
-      title: result.displayName,
-      url: `/pdp/${result?.data?.slug.value}`,
-      brand: result?.brand?.displayName,
-      // @ts-ignore
-      category: result?.categoryPaths[0].pathFromRoot[0].displayName,
-      price: result?.listPrice,
-    };
-  });
+  //Map to exsiting hygraph component data structure
+  const relewiseMappedProducts = MapToHygraphDatastructure(result?.results);
 
   return (
     <main className="max-w-screen-2xl mx-auto">
@@ -102,7 +73,7 @@ export default async function Plp({
 
         <div className="grid gap-6 mx-12 pb-32 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 md:gap-12">
           {relewiseMappedProducts &&
-            relewiseMappedProducts.map((product) => {
+            relewiseMappedProducts.map((product: { key: Key | null | undefined; image: { url: string; }; title: string; url: string; brand: any; }) => {
               return (
                 <Card
                   key={product.key}
