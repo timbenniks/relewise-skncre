@@ -1,7 +1,6 @@
 import { getOptionsWithUser, MapToHygraphDatastructure, relewiseRecommender } from "@/lib/relewiseTrackingUtils";
 import Card from "./Card";
-import { PurchasedWithProductBuilder, Recommender } from "@relewise/client";
-import { resolveObjectURL } from "buffer";
+import { PurchasedWithProductBuilder} from "@relewise/client";
 
 interface Props {
   productId: string;
@@ -42,7 +41,7 @@ export default async function ProductList({ productId }: Props) {
     const result = await recommender.recommendPurchasedWithProduct(
       preppedQuery
   );
-  
+
   //Map to exsiting hygraph component data structure
   const relewiseMappedProducts = MapToHygraphDatastructure(result?.recommendations);
 

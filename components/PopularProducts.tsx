@@ -1,6 +1,6 @@
 import { getOptionsWithUser, MapToHygraphDatastructure, relewiseRecommender } from "@/lib/relewiseTrackingUtils";
 import Card from "./Card";
-import { PopularProductsBuilder, Recommender } from "@relewise/client";
+import { PopularProductsBuilder } from "@relewise/client";
 
 interface Props {
   productId: string;

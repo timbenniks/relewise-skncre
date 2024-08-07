@@ -4,14 +4,12 @@ import {
   CategoryFacetResult,
   ProductDataStringValueFacetResult,
   ProductSearchBuilder,
-  Searcher,
 } from "@relewise/client";
 import { getOptionsWithUser, relewiseSearcher } from "@/lib/relewiseTrackingUtils";
 import Card from "@/components/Card";
 import BrandFacet from "@/components/BrandFacet";
 import IngredientFacet from "@/components/IngredientFacet";
 import CategoryFacet from "@/components/CategoryFacet";
-import { unstable_noStore as noStore } from 'next/cache';
 
 export default async function SearchPage({
   searchParams,
@@ -24,7 +22,6 @@ export default async function SearchPage({
     page?: string;
   };
 }) {
-  noStore();//forcing next.js to NOT cache the page....
 
   const query = searchParams?.query || null;
   const brandsParam = searchParams?.brands
@@ -86,7 +83,7 @@ export default async function SearchPage({
   } else {
     result = await searcher.searchProducts(preppedQuery);
   }
-console.log(result);
+  
   const brandFacets =
     (result?.facets?.items?.find((item) =>
       item.$type.includes("BrandFacetResult")

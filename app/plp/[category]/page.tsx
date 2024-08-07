@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import type { SkncreProductsQuery } from "@/gql/graphql";
-import { getSkncreProducts } from "@/queries/getSkncreProducts";
 import Card from "../../../components/Card";
-import { ProductSearchBuilder, ProductSearchResponse, Searcher, UserFactory } from "@relewise/client";
+import { ProductSearchBuilder } from "@relewise/client";
 import { getRelewiseUser, relewiseTracker } from "../../../helpers";
 import { getOptionsWithUser, MapToHygraphDatastructure, relewiseSearcher } from "@/lib/relewiseTrackingUtils";
 import { Key } from "react";
@@ -26,9 +24,9 @@ export default async function Plp({
     skip: 0,
   };
   const searcher = relewiseSearcher();
-
   const cat = decodeURIComponent(params.category);
 
+  //Simple standard implementation of tracking
   await relewiseTracker().trackProductCategoryView({
     idPath: [cat],
     user: getRelewiseUser(),

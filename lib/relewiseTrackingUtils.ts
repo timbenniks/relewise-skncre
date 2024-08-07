@@ -1,4 +1,4 @@
-import { ProductSearchResponse, Recommender, Searcher, Tracker, UserFactory } from '@relewise/client';
+import { Recommender, Searcher, Tracker, UserFactory } from '@relewise/client';
 
 export function getRelewiseUser() {
   return UserFactory.anonymous();
