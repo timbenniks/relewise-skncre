@@ -5,11 +5,12 @@ import {
   ProductDataStringValueFacetResult,
   ProductSearchBuilder,
 } from "@relewise/client";
-import { getOptionsWithUser, relewiseSearcher } from "@/lib/relewiseTrackingUtils";
+import { getOptionsWithUser, MapToHygraphDatastructure, relewiseSearcher } from "@/lib/relewiseTrackingUtils";
 import Card from "@/components/Card";
 import BrandFacet from "@/components/BrandFacet";
 import IngredientFacet from "@/components/IngredientFacet";
 import CategoryFacet from "@/components/CategoryFacet";
+import { Key } from "react";
 
 export default async function SearchPage({
   searchParams,
@@ -37,10 +38,6 @@ export default async function SearchPage({
   const searcher = relewiseSearcher();
 
   const settings = getOptionsWithUser(process.env.NEXT_PUBLIC_RELEWISE_USER as string, "Hygraph Demo - Search Page");
-  //const settings = getOptionsWithUser("anonymous", "Hygraph Demo - Search Page");
-  //const settings = getOptionsWithUser("benniks", "Hygraph Demo - Search Page");
-  //const settings = getOptionsWithUser("hygraph", "Hygraph Demo - Search Page");
-  //const settings = getOptionsWithUser("bennich", "Hygraph Demo - Search Page");
 
   let builder;
   let result;
@@ -61,7 +58,6 @@ export default async function SearchPage({
     })
     .setTerm(query)
     .pagination((p) => p.setPageSize(30).setPage(1))
-   // .relevanceModifiers(modifier => modifier.addProductRecentlyPurchasedByUserCompanyRelevanceModifier(750, 15))
     .facets((f) =>
       f
         .addBrandFacet(brandsParam)
@@ -83,7 +79,7 @@ export default async function SearchPage({
   } else {
     result = await searcher.searchProducts(preppedQuery);
   }
-  
+
   const brandFacets =
     (result?.facets?.items?.find((item) =>
       item.$type.includes("BrandFacetResult")
@@ -99,20 +95,8 @@ export default async function SearchPage({
       item.$type.includes("CategoryFacetResult")
     ) as CategoryFacetResult) || undefined;
 
-  const relewiseMappedProducts = result?.results?.map((result) => {
-    return {
-      key: result.productId,
-      image: {
-        url: result?.data?.image.value,
-      },
-      title: result?.displayName || "",
-      url: `/pdp/${result?.data?.slug.value}`,
-      brand: result?.brand?.displayName,
-      // @ts-ignore
-      category: result?.categoryPaths[0].pathFromRoot[0].displayName,
-      price: result?.listPrice,
-    };
-  });
+console.log(result);
+    const relewiseMappedProducts = MapToHygraphDatastructure(result?.results);
 
   return (
     <main className="max-w-screen-2xl mx-auto">
@@ -120,7 +104,7 @@ export default async function SearchPage({
       {relewiseMappedProducts && relewiseMappedProducts.length > 0 && (
         <>
           <h3 className="text-5xl pt-12 mb-12 font-bold font-title text-center">
-            Search result
+            Search result - server response time: {result?.statistics?.serverTimeInMs} ms
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
             <aside className="md:col-span-2">
@@ -132,7 +116,7 @@ export default async function SearchPage({
 
             <section className="md:col-span-10 mb-12">
               <div className="grid gap-6 pb-32 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 md:gap-12">
-                {relewiseMappedProducts.map((product) => (
+                {relewiseMappedProducts.map((product: { key: Key | null | undefined; image: { url: string; }; title: string; url: string; brand: any; }) => (
                   <Card
                     key={product.key}
                     image={product.image}
