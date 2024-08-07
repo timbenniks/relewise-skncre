@@ -95,7 +95,6 @@ export default async function SearchPage({
       item.$type.includes("CategoryFacetResult")
     ) as CategoryFacetResult) || undefined;
 
-console.log(result);
     const relewiseMappedProducts = MapToHygraphDatastructure(result?.results);
 
   return (
